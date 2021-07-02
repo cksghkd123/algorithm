@@ -6,15 +6,13 @@ def bfs(row,col):
     dr = [0,0,1,-1]
     dc = [1,-1,0,0]
     deq = collections.deque()
-    deq.append((row,col))
-    global count 
-    count += 1
+    deq.append((row,col)) 
     house = 0
+    visited[row][col] = True
+    map_list[row][col] = count
 
     while deq:
-        visited[row][col] = True
         row, col = deq.popleft()
-        map_list[row][col] = count
         house += 1
 
         for w in range(4):
@@ -25,6 +23,7 @@ def bfs(row,col):
                 if visited[nr][nc] == False and map_list[nr][nc] == 1:
                     deq.append((nr,nc))
                     visited[nr][nc] = True
+                    map_list[row][col] = count
     
     howmanyhouse.append(house)
 
@@ -46,13 +45,14 @@ for row in range(N):
     for col in range(N):    
         if map_list[row][col] == 1:
             if visited[row][col] == False:
+                count += 1
                 bfs(row,col)
         
 print(count)
 
 howmanyhouse.sort()
-for i in howmanyhouse:
-    if i == howmanyhouse[len(howmanyhouse)-1]:
-        print(i,end='')
+for i in range(len(howmanyhouse)):
+    if i == len(howmanyhouse) - 1:
+        print(howmanyhouse[i], end="")
     else:
-        print(i)
+        print(howmanyhouse[i])

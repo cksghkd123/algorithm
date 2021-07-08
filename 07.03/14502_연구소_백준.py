@@ -25,8 +25,11 @@ map_list = []
 virusspot = []
 blank = []
 
+#연구소의 구조 정보를 파악
+
 for i in range(N):
     map_list.append(list((map(int,input().split()))))
+
 
 for row in range(N):
     for col in range(M):

@@ -24,7 +24,8 @@ def findngo(sr,sc):
                 if 0 <= nr < N and 0 <= nc < N:
                     if nr == tr and nc == tc:
                         time += 1
-                        button = True
+                        button = True                
+                        arrive_time.append((time,tr,tc))
                         break
 
                     if visit[nr][nc] == False:
@@ -35,7 +36,6 @@ def findngo(sr,sc):
             if button == True:
                 break
         
-        arrive_time.append((time,tr,tc))
     
     if arrive_time == []:
         return True
@@ -54,9 +54,10 @@ def findngo(sr,sc):
                 if short[2] < arrive_time[i][2]:
                     continue
                 elif short[2] > arrive_time[i][2]:
-                    short = arrive_time
+                    short = arrive_time[i]
 
     food.remove((short[1],short[2]))
+
 
     global mommy_time
     global ssr
@@ -82,6 +83,7 @@ for i in range(1,7):
 for row in range(N):
     for col in range(N):
         if 1 <= map_list[row][col] <= 6:
+            k = map_list
             fish_list[map_list[row][col]].append((row,col))
         elif map_list[row][col] == 9:
             ssr = row

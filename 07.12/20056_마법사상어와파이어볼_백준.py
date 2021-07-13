@@ -7,7 +7,6 @@ def holjjak(x):
         return 1
 
 def fireball_move(row,col,mas,spd,dir,i):
-    print('move')
     w = [(-1,0),(-1,1),(0,1),(1,1),(1,0),(1,-1),(0,-1),(-1,-1)]
     
     nr, nc = (y + z for y,z in zip((row, col) , (map(lambda x: x*spd, w[dir]))))
@@ -17,12 +16,8 @@ def fireball_move(row,col,mas,spd,dir,i):
     fireball_info[i][0] = nr
     fireball_info[i][1] = nc
     
-    print(nr,nc)
-
-    
 
 def fireball_check():
-    print('check')
     list = {}
     for i in range(len(fireball_info)):
         list[(fireball_info[i][0],fireball_info[i][1])] = []
@@ -30,7 +25,6 @@ def fireball_check():
     for i in range(len(fireball_info)):
         list[(fireball_info[i][0],fireball_info[i][1])].append(i)
     
-    print(list)
 
 
     list2 = {}
@@ -42,15 +36,12 @@ def fireball_check():
     return list2
 
 def fireball_crash():
-    print('crash')
-    print(com_fireball,fireball_info)
     new_fireball_info = []
     for key, val in com_fireball.items():
         nd = None
         nm = 0
         ns = 0
         for n in val:
-            print(fireball_info,n)
             nm += fireball_info[n][2]
             ns += fireball_info[n][3]
             if nd == None:
@@ -66,7 +57,6 @@ def fireball_crash():
             continue
         
         ns = ns//len(val)
-        print(nm,ns,nd)
 
 
         if nd == 0:
@@ -76,16 +66,14 @@ def fireball_crash():
             for i in range(4):
                 new_fireball_info.append([key[0],key[1],nm,ns,i*2+1])
 
-    dellist = [d for d in i for i in com_fireball.values()]
+    dellist = [d for i in com_fireball.values() for d in i]
     dellist.sort()
-    for val in com_fireball.values():
-        for n in reversed(dellist):
-            fireball_info.pop(n)
 
-    print(new_fireball_info)
+    for n in reversed(dellist):
+        fireball_info.pop(n)
+
     fireball_info.extend(new_fireball_info)
     
-    print(fireball_info)
 
 def fireball_mass():
     total = 0

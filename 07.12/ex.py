@@ -1,2 +1,2 @@
-a,b = [x+y for x,y in zip((1,2),(3,4))]
-print(a,b)
+a = {'a':1,'b':2}
+print(len(a))

@@ -16,3 +16,5 @@ print(heapq.heappop(a))
 
 print(heapq.heappop(a))
 
+print(a)
+

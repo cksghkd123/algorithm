@@ -20,6 +20,7 @@ def union(x,y):
     fy = find(y)
     if fx != fy:
         parent[fy] = fx
+    #parent(find(y)) = find(x) ??
     
 #이제 정렬된 간선을 하나씩 검사한다. 만약 해당 차례의 간선이 이미 만들어진 MST에 속해있다면 
 #(find(v1) == find(v2) 인 경우) 아무것도 하지 않고, 속해있지 않다면 union을 통해 병합한다.

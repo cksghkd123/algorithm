@@ -1,63 +1,71 @@
-import collections
+from pprint import pprint
+from collections import deque
 import copy
 
 
-dr = [0,0,1,-1]
-dc = [1,-1,0,0]
-deq = collections.deque()
+def combination(list, k, r, result, comset):
+    if len(result) == r:
+        comset.append(result)
+        return
+    if k >= len(list):
+        return
+    else:
+        combination(list, k+1, r, result + [list[k]], com_room)
+        combination(list, k+1, r, result, com_room)
 
-def bfs(row,col):
-    deq.append((row,col))
+def build_walls(new_wall):
+    new_map_list = copy.deepcopy(map_list)
+    for row, col in new_wall:
+        new_map_list[row][col] = 1
+    return new_map_list
+    
+
+dr = [0, 0, 1, -1]
+dc = [1, -1, 0, 0]
+def bfs():
+    no_viruszone = len(room) - 3
+
+    deq = deque()
+    for v in virus:
+        visited[v[0]][v[1]] = True
+        deq.append(v)
+
     while deq:
         row, col = deq.popleft()
         for w in range(4):
             nr = row + dr[w]
             nc = col + dc[w]
-
-            if 0 <= nr < N and 0 <= nc < M:
-                if mapcase[nr][nc] == 0:
-                    mapcase[nr][nc] = 2
-                    deq.append((nr,nc))
-
-
-N, M = map(int,input().split())
-map_list = []
-virusspot = []
-blank = []
-
-#연구소의 구조 정보를 파악
-
-for i in range(N):
-    map_list.append(list((map(int,input().split()))))
+            if 0 <= nr < n and 0 <= nc < m:
+                if visited[nr][nc] == False and new_map_list[nr][nc] == 0:
+                    visited[nr][nc] = True
+                    no_viruszone -= 1
+                    deq.append((nr, nc))
+    
+    return no_viruszone
 
 
-for row in range(N):
-    for col in range(M):
-        if map_list[row][col] == 0:
-            blank.append((row,col))
-        elif map_list[row][col] == 2:
-            virusspot.append((row,col))
 
-count = 0
-# 벽이 세워지는 경우의 수에 따른 출력값 조사
+n, m = map(int,input().split())
+virus = []
+room = []
+map_list = [list(map(int,input().split())) for _ in range(n)]
+for row in range(n):
+    for col in range(m):
+        if map_list[row][col] == 2:
+            virus.append((row, col))
+        elif map_list[row][col] == 0:
+            room.append((row, col))
 
-for a in range(0,len(blank)-3):
-    for b in range(a+1,len(blank)-2):
-        for c in range(b+1,len(blank)-1):
-            mapcase = copy.deepcopy(map_list)
-            wall = [blank[a],blank[b],blank[c]]
-            for row,col in wall:
-                mapcase[row][col] = 1
-            for row,col in virusspot:
-                bfs(row,col)
+com_room = []
+combination(room, 0, 3, [], com_room)
+maxresult = -1
 
-            ncount = 0
-            for row in range(N):
-                for col in range(M):
-                    if mapcase[row][col] == 0:
-                        ncount += 1
-            
-            if count < ncount :
-                count = ncount
+print(len(room))
+for new_wall in com_room:
 
-print(count)
+    new_map_list = build_walls(new_wall)
+    visited = [[False]*m for _ in range(n)]
+    result = bfs()
+    maxresult = max(result, maxresult)
+
+print(maxresult)

@@ -60,7 +60,6 @@ com_room = []
 combination(room, 0, 3, [], com_room)
 maxresult = -1
 
-print(len(room))
 for new_wall in com_room:
 
     new_map_list = build_walls(new_wall)

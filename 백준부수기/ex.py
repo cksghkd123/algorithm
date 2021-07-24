@@ -1,5 +1,6 @@
-from collections import Counter
+a = [(1,2), (3,4), (5,6)]
+for i,j in a:
+    print(i,j)
 
-a = Counter('hello world').most_common()
-
-print(a)
+b = [1,2,3,4,5,6]
+print(' '.join(map(str,a)))

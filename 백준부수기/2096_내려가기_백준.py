@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+
 def max_drop(a, b):
     c = [ max(a[0], a[1]) + b[0], max(a) + b[1], max(a[1], a[2]) + b[2] ]
     return c

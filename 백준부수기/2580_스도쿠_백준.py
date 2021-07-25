@@ -1,49 +1,66 @@
-import collections
-from pprint import pprint
+from collections import *
 
 
-complete = {1,2,3,4,5,6,7,8,9}
-x = []
-y = [set() for _ in range(9)]
-squre = [set() for _ in range(9)]
+def make_it(row, col, num):
+    x[row].remove(num)
+    y[col].remove(num)
+    squre[3*(row//3) + (col//3)].remove(num)
+    sudoku[row][col] = num
 
-unknown = collections.deque()
+def return_it(row, col, num):
+    x[row].add(num)
+    y[col].add(num)
+    squre[3*(row//3) + (col//3)].add(num)
+    sudoku[row][col] = 0
+
+def solve_sudoku(index):
+    global button
+    if button:
+        return
+
+    if index == len(spots):
+        for i in range(9):
+            print(' '.join(map(str,sudoku[i])))
+        button = True
+        return
+    
+    row, col = spots[index]
+
+    possible = x[row] & y[col] & squre[3*(row//3) + (col//3)]
+
+    if len(possible) == 0:
+        return
+
+    if len(possible) == 1:
+        make_it(row, col, list(possible)[0])
+        solve_sudoku(index + 1)
+        return_it(row, col, list(possible)[0])
+        
+    else:
+        for i in possible:
+            make_it(row, col, i)
+            solve_sudoku(index + 1)
+            return_it(row, col ,i)
+
+    return
+
+        
 sudoku = []
+x = [{i+1 for i in range(9)} for _ in range(9)]
+y = [{i+1 for i in range(9)} for _ in range(9)]
+squre = [{i+1 for i in range(9)} for _ in range(9)]
+spots = deque()
 
-for i in range(9):
-    row = list(map(int,input().split()))
-    sudoku.append(row)
-    x.append(set(row))
+for row in range(9):
+    sudoku.append(list(map(int,input().split())))
+    x[row] = x[row].difference(set(sudoku[row]))
+    for col in range(9):
+        if sudoku[row][col] == 0:
+            spots.append((row, col))
+            continue
+        part = 3*(row//3) + (col//3)
+        y[col] = y[col].difference({sudoku[row][col]})
+        squre[part] = squre[part].difference({sudoku[row][col]})
 
-    for j in range(9):
-        if row[j] == 0:
-            unknown.append((i, j))
-        y[j].add(row[j])
-        squre[(i//3)*3 + (j//3)].add(row[j])
-
-
-n = 1
-while unknown:
-    print(unknown)
-    pprint(sudoku)
-    for _ in range(len(unknown)):
-        i, j = unknown.popleft()
-        k = (i//3)*3 + (j//3)
-        temp = list(complete.difference(x[i]).intersection(complete.difference(y[j])).intersection(complete.difference(squre[k])))
-
-        if len(temp) == n:
-            gettin = temp.pop()
-            sudoku[i][j] = gettin
-            x[i].add(gettin)
-            y[j].add(gettin)
-            squre[k].add(gettin)
-            n = 0
-            break
-
-        else:
-            unknown.append((i, j))
-    n += 1
-
-for k in range(9):
-    print(' '.join(map(str,sudoku[k])))
-
+button = False
+solve_sudoku(0)

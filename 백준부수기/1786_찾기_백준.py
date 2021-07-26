@@ -31,7 +31,6 @@ def kmp(reference, keyword, pattern):
             if ki == 0:
                 ri += 1
             else:
-                ri += ki - pattern[ki - 1]
                 ki = pattern[ki - 1]
         
         else:

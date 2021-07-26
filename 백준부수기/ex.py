@@ -1,6 +1,5 @@
-a = [(1,2), (3,4), (5,6)]
-for i,j in a:
-    print(i,j)
+a = ['a', 'b', 'c']
+print(a)
 
-b = [1,2,3,4,5,6]
-print(' '.join(map(str,a)))
+b = ''.join(a)
+print(b)

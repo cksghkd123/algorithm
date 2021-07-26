@@ -35,7 +35,7 @@ def kmp(reference, keyword, pattern):
             ki += 1
             if ki == len(keyword):
                 count += 1
-                ki = keyword[ki-1]
+                ki = pattern[ki-1]
 
     return count
 
@@ -47,8 +47,9 @@ def reduced_fraction(numerator, denominator):
     i = 0
     while i < len(a):
         if a[i] in b:
-            a.pop(i)
             b.pop(b.index(a[i]))
+            a.pop(i)
+            continue
 
         i += 1
     
@@ -66,7 +67,6 @@ def factorization(num):
     while i <= num:
 
         if num%i == 0:
-            print(num, i)
             result.append(i)
             num = num//i
             continue

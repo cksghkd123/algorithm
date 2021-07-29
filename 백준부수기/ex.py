@@ -1,5 +1,7 @@
-abc = [[1,2,3],[4,5,6],[7,8,9]]
+import heapq
 
+a = [(0, 0), (2, 1), (1, 2), (4, 0), (4, 3)]
 
-for c in range(len(abc)):
-    print(sum(map(lambda r: abc[r][c],range(3))))
+a.sort()
+for i in a:
+    print(i)

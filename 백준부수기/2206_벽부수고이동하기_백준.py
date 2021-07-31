@@ -1,5 +1,4 @@
 import collections
-from pprint import pprint
 
 
 dr = [0, 0, 1, -1]

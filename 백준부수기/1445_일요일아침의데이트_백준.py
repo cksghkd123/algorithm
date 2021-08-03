@@ -11,7 +11,7 @@ def near_garbage(row, col, count):
 
         if 0 <= nr < n and 0 <= nc < m:
             if forest[nr][nc] == 'g':
-                count += 1
+                return count+1
     return count
 
 def bfs(start, finish, garbage_limit):
@@ -31,10 +31,10 @@ def bfs(start, finish, garbage_limit):
                     if g+1 < minimum_garbage[nr][nc][0]:
                         minimum_garbage[nr][nc][0] = g+1
                         minimum_garbage[nr][nc][1] = near_g
-                        deq.append((nr, nc, g+1, n_near_g))
+                        deq.append((nr, nc, g+1, near_g))
                     elif g+1 == minimum_garbage[nr][nc][0] and near_g < minimum_garbage[nr][nc][1]:
                         minimum_garbage[nr][nc][1] = near_g
-                        deq.append((nr, nc, g+1, n_near_g))
+                        deq.append((nr, nc, g+1, near_g))
 
                 elif forest[nr][nc] == 'F':
                     if g < minimum_garbage[nr][nc][0]:
@@ -52,7 +52,7 @@ def bfs(start, finish, garbage_limit):
                         minimum_garbage[nr][nc][1] = n_near_g
                         deq.append((nr, nc, g, n_near_g))
 
-        
+           
     result = minimum_garbage[finish[0]][finish[1]]
 
     return result    
@@ -71,7 +71,3 @@ minimum_garbage = [[[INF, INF] for _ in range(m) ] for _ in range(n) ]
 result = bfs(info['S'][0], info['F'][0], len(info['g']))
 
 print(*result)
-pprint(minimum_garbage)
-
-
-

@@ -1,96 +1,91 @@
-from collections import deque
+import collections
 
 
-dr = [-1, 0, 1, 0]
-dc = [0, -1, 0, 1]
-
-def find_cus(man, init_fuel):
-    row, col = man
-    time = 0
-    visited = [[False]*N for _ in range(N)]
-    visited[row][col] = True
-    deq = deque()
-    deq.append((row, col, time))
-
-    if (row, col) in customer_destination:
-        return (row, col), init_fuel - time
+dr = (-1, 0, 0, 1)
+dc = (0, -1, 1, 0)
+def find_customer(texi_row, texi_col, k):
+    visited[texi_row][texi_col][k] = True
+    deq = collections.deque()
+    deq.append((texi_row, texi_col, 0))
+    candidate = []
 
     while deq:
-        row, col, time = deq.popleft()
-        if (row, col) in customer_destination:
-            return (row, col), init_fuel - time
-
-        for w in range(4):
-            
-            nr = row + dr[w]
-            nc = col + dc[w]
-
-            if 0 <= nr < N and 0 <= nc < N:
-                if visited[nr][nc] == False and map_list[nr][nc] == 0:
-                    if time + 1 > init_fuel:
-                        continue
-                    deq.append((nr, nc, time + 1))
-                    visited[nr][nc] = True
-    return (0,0) , -1
-
-def take_cus(man):
-    return (customer_destination[man][0], customer_destination[man][1])
-
-def go_dest(man, destination, init_fuel):
-    row, col = man
-    time = 0
-    visited = [[False]*N for _ in range(N)]
-    visited[row][col] = True
-    deq = deque()
-    deq.append((row, col, time))
-
-    while deq:
-        row, col, time = deq.popleft()
-        if (row, col) == destination:
-            return (row, col), init_fuel + time
-
+        row, col, count  = deq.popleft()
+        if candidate:
+            if count > max_count:
+                continue
+        for i in range(len(customer_destination)):
+            if row == customer_destination[i][0] and col == customer_destination[i][1]:
+                a, b, c, d = customer_destination[i]
+                max_count = count
+                candidate.append((a,b,c,d,i))
         for w in range(4):
             nr = row + dr[w]
             nc = col + dc[w]
-
-            if 0 <= nr < N and 0 <= nc < N:
-                if visited[nr][nc] == False and map_list[nr][nc] == 0:
-                    if time + 1 > init_fuel:
-                        continue
-                    deq.append((nr, nc, time + 1))
-                    visited[nr][nc] = True
+            if 0 <= nr < n and 0 <= nc < n:
+                if map_list[nr][nc] == 0 and visited[nr][nc][k] == False:
+                    visited[nr][nc][k] = True
+                    deq.append((nr,nc,count+1))
     
-    return (0, 0), -1
-    
+    if candidate:
+        candidate.sort()
+        a, b, c, d, i = candidate[0]
+        customer_destination.pop(i)
+        return max_count, a, b, c, d
 
-N, M, fuel = map(int,input().split())
-map_list = [list(map(int,input().split())) for _ in range(N)]
-driver = list(map(lambda x: x-1, list(map(int,input().split()))))
-customer_destination = {}
+    return None, None, None, None, None
 
-for _ in range(M):
-    a = list(map(int,input().split()))
-    customer_destination[(a[0]-1, a[1]-1)] = (a[2]-1, a[3]-1)
+def go_destination(texi_row, texi_col, dest_row, dest_col ,k):
+    visited[texi_row][texi_col][k] = True
+    deq = collections.deque()
+    deq.append((texi_row, texi_col, 0))
 
-print(customer_destination)
-for i in range(M):
-    print('!!!',i+1)
-    print(driver,fuel)
-    next_cus, fuel = find_cus(driver, fuel)
-    if fuel == -1:
+    while deq:
+        row, col, count  = deq.popleft()
+        if row == dest_row and col == dest_col:
+            return count, row, col
+        for w in range(4):
+            nr = row + dr[w]
+            nc = col + dc[w]
+            if 0 <= nr < n and 0 <= nc < n:
+                if map_list[nr][nc] == 0 and visited[nr][nc][k] == False:
+                    visited[nr][nc][k] = True
+                    deq.append((nr,nc,count+1))
+
+    return None, None, None
+
+n, m, fuel = map(int,input().split())
+map_list = [list(map(int,input().split())) for _ in range(n)]
+t_r, t_c = map(lambda x: int(x)-1,input().split())
+customer_destination = [list(map(lambda x: int(x)-1,input().split())) for _ in range(m)]
+visited = [[[False for _ in range(2*m)] for _ in range(n)] for _ in range(n)]
+visited_index = 0
+
+while customer_destination:
+    required_fuel, c_r, c_c, d_r, d_c = find_customer(t_r, t_c, visited_index)
+    #벽에 막혔을 때
+    if required_fuel == None:
+        print(-1)
+        break
+    visited_index += 1
+    fuel -= required_fuel
+    #연료가 다 떨어졌을 때
+    if fuel < 0:
         print(-1)
         break
 
-    next_dest = take_cus(next_cus)
-    print(next_cus,fuel)
-    driver, fuel = go_dest(next_cus, next_dest, fuel)
-    print(driver,fuel)
-    if fuel == -1:
+    required_fuel, t_r, t_c = go_destination(c_r, c_c, d_r, d_c, visited_index)
+    #벽에 막혔을 때
+    if required_fuel == None:
         print(-1)
         break
+    visited_index += 1
+    fuel -= required_fuel
+    #연료가 다 떨어졌을 때
+    if fuel < 0:
+        print(-1)
+        break
+    fuel += required_fuel*2
 
-    
-    del customer_destination[next_cus]
-
-if fuel != -1:
-    print(fuel)
+    if visited_index == m*2:
+        print(fuel)

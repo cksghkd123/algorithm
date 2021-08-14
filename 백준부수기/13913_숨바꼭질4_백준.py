@@ -3,22 +3,33 @@ import collections
 
 def bfs(subin, sister):
     deq = collections.deque()
-    deq.append((subin,[subin]))
-    if subin > sister:
-        return [i for i in range(subin,sister-1,-1)]
-
+    visited[subin] == True
+    deq.append(subin)
     while deq:
-        spot, trace = deq.popleft()
+        spot= deq.popleft()
         if spot > sister:
-            deq.append((spot-1, trace + [spot-1]))
+            if 0 <= spot-1 and visited[spot-1] == False:
+                visited[spot-1] = True
+                trace[spot-1] = spot
+                deq.append(spot-1)
         elif spot == sister:
-            return trace
+            result = [sister]
+            while spot != subin:
+                spot = trace[spot]
+                result.append(spot)
+            result.reverse()
+            print(len(result)-1)
+            return result
         else:
-            deq.append((spot+1, trace + [spot+1]))
-            deq.append((spot-1, trace + [spot-1]))
-            deq.append((spot*2, trace + [spot*2]))
+            for next_spot in (spot+1, spot-1, spot*2):
+                if 0 <= next_spot < 100001 and visited[next_spot] == False:
+                    visited[next_spot] = True
+                    trace[next_spot] = spot
+                    deq.append(next_spot)
 
 
 n, k = map(int,input().split())
+visited = [False] * 100001
+trace = [0]*100001
 result = bfs(n, k)
-print(result)
+print(*result)

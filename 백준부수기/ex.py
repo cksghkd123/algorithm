@@ -16,3 +16,4 @@ for i in d:
 		print(i,0)
 	if i == -1:
 		print(i,-1)
+????

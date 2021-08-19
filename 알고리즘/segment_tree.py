@@ -26,9 +26,9 @@ def query(start, end, index, qleft, qright):
     return query(start, mid, index*2, qleft, qright) + query(mid+1, end, index*2+1, qleft, qright)
 
 
-init(1, N, 1) #인덱스 1부터 시작 >> 1부터 해야 왼쪽 노드를 짝수로 정렬이 가능하기 편해서
+init(1, len(array), 1) #인덱스 1부터 시작 >> 1부터 해야 왼쪽 노드를 짝수로 정렬이 가능하기 편해서
 s, e = map(int,input().split()) # 구간선택
-result = query(1, N, 1, s, e)
+result = query(1, len(array), 1, s, e)
 print(result)
 
 ##반복문으로 구간의 합 >> O(N)의 시간복잡도

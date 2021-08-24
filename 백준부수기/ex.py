@@ -1,3 +1,12 @@
-a = [[1,2,3],[4,5,6],[7,8,9]]
-print(a[0])
-print([a[i][0] for i in range(3)])
+
+dr = [0, 1, 0, -1]
+dc = [-1, 0, 1, 0]
+
+row = 2
+col = 2
+direction = [0, 1, 2, 3]
+#북 동 남 서
+for i in direction:
+    nr = row + dr[(-i-1+2)%4]
+    nc = col + dc[(-i-1+2)%4]
+    print(nr,nc)

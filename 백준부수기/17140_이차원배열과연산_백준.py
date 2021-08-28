@@ -44,6 +44,6 @@ while time <= 100:
         array = list(map(list, zip(*array)))
     time += 1
 
-if time == 100:
+if time > 100:
     time = -1
 print(time)

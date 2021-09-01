@@ -2,9 +2,10 @@ dr = [-1, -1, 0, 1, 1, 1, 0, -1]
 dc = [0, -1, -1, -1, 0, 1, 1, 1]
 def moving_fishes():
     movin_list = []
-    for number, info in fishes.items():
-        if number == 17:
+    for number in range(1,17):
+        if number not in fishes:
             continue
+        info = fishes[number]
         fish_row, fish_col, direction = info
         for w in range(8):
             nr = fish_row + dr[(direction+w)%8]
@@ -16,7 +17,7 @@ def moving_fishes():
                     fishes[number] = [nr, nc, nd]
                     map_list[fish_row][fish_col] = 0
                     map_list[nr][nc] = number
-                    movin_list.append((number, fish_row, fish_col, direction))
+                    movin_list.append([number,fish_row,fish_col,direction,next_fish,nr,nc])
                 elif next_fish == 17:
                     continue
                 else:
@@ -24,14 +25,12 @@ def moving_fishes():
                     fishes[next_fish][0] = fish_row
                     fishes[next_fish][1] = fish_col
                     map_list[fish_row][fish_col], map_list[nr][nc] = map_list[nr][nc], map_list[fish_row][fish_col]
-                    movin_list.append((number, fish_row, fish_col, direction))
+                    movin_list.append([number,fish_row,fish_col,direction,next_fish,nr,nc])
                 break
-                    
+
     return movin_list
 
-
-
-def moving_shq(map_list, fishes, shq_row, shq_col, direction, score):
+def moving_shq(shq_row, shq_col, direction, score):
     init_row = shq_row
     init_col = shq_col
     go_home = False
@@ -42,29 +41,29 @@ def moving_shq(map_list, fishes, shq_row, shq_col, direction, score):
             go_home = True
             map_list[init_row][init_col] = 0
             eaten = map_list[shq_row][shq_col]
+
             fishes[17] = fishes[eaten][2]
             del fishes[eaten]
             map_list[shq_row][shq_col] = 17
-            print("전")
-            print(map_list)
             moves = moving_fishes()
-            print("후")
-            print(map_list)
-            moving_shq(map_list, fishes, shq_row, shq_col, fishes[17], score+eaten)
+            moving_shq(shq_row, shq_col, fishes[17], score+eaten)
+            for n, r, c, d, nn, rr, cc in reversed(moves):
+                map_list[rr][cc], map_list[r][c] = map_list[r][c], map_list[rr][cc]
+                fishes[n] = [r, c, d]
+                if nn == 0:
+                    continue
+                fishes[nn][0] = rr
+                fishes[nn][1] = cc
             map_list[shq_row][shq_col] = eaten
             map_list[init_row][init_col] = 17
             fishes[eaten] = [shq_row,shq_col,fishes[17]]
             fishes[17] = direction
-            for n, r, c, d in reversed(moves):
-                map_list[fishes[n][0]][fishes[n][1]], map_list[r][c] = map_list[r][c], map_list[fishes[n][0]][fishes[n][1]]
-                fishes[n][2] = d
 
         shq_row += dr[direction]
         shq_col += dc[direction]
 
     if go_home == False:
         global result
-        print(map_list, score)
         result = max(result, score)
 
 
@@ -83,7 +82,5 @@ fishes[17] = fishes[first_eaten][2]
 del fishes[first_eaten]
 map_list[0][0] = 17
 moving_fishes()
-print(map_list)
-moving_shq(map_list,fishes,0,0,fishes[17],first_eaten)
-
+moving_shq(0,0,fishes[17],first_eaten)
 print(result)

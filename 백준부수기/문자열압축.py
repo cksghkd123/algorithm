@@ -1,37 +1,32 @@
-def solution(s):
-    answer = len(s)
+import collections
 
-    for i in range(1,len(s)//2+1):
-        result = 0
-        pivot = s[0:i]
-        count = 1
-        for j in range(i, len(s), len(pivot)):
-            print(j,pivot)
-            print(result)
-            if j+i <= len(s):
-                if s[j:j+i] == pivot:
-                    count += 1
-                else:
-                    if count == 1:
-                        result += len(pivot)
-                    else:
-                        result += len(pivot) + 1
-                    pivot = s[j:j+i]
-                    count = 1
+
+def solution(words, queries):
+    answer = []
+    memo = {}
+    for query in queries:
+        if query in memo:
+            answer.append(memo[query])
+            continue
+
+        count = 0
+        for word in words:
+            if len(word) != len(query):
+                continue
+            for i in range(len(query)):
+                if query[i] == '?':
+                    continue
+                if query[i] != word[i]:
+                    break
             else:
-                if count == 1:
-                    result += len(pivot)
-                else:
-                    result += len(pivot) + 1
-                pivot = s[j:j+i]
-                count = 1
-        if count == 1:
-            result += len(pivot)
-        else:
-            result += len(pivot) + 1
-        print(result)
-        answer = min(answer, result)
-        
+                count += 1
+        memo[query] = count
+        answer.append(count)
+
     return answer
 
-print(solution("abcabcdede"))
+
+
+
+
+print(solution(["frodo", "front", "frost", "frozen", "frame", "kakao"],["fro??", "????o", "fr???", "fro???", "pro?"]))

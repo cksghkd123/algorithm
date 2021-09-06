@@ -1,6 +1,3 @@
-print('a'+'bb')
-a = 'abc'
-a = list(a)
-print(a)
-a.pop()
+a = set()
+a.add([1,2,3])
 print(a)

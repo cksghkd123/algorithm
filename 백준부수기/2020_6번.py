@@ -1,6 +1,9 @@
 def combination(part, dist_range, r, target, result:set):
+    global button
+    if button == True:
+        return
+
     if len(result) == target:
-        global button
         button = True
         return
     
@@ -16,8 +19,12 @@ def solution(n, weak, dist):
     dist.sort(reverse=True)
     
     dist_range = {i:[] for i in dist}
-    for i in range(n):
-        for j in dist:
+    
+
+    for ii in range(1, len(dist)+1, 1):
+        part = dist[:ii]
+        j = part[-1]
+        for i in weak:
             temp = set()
             for w in weak:
                 if i <= w <= i+j or i <= w+n <= i+j:
@@ -25,11 +32,9 @@ def solution(n, weak, dist):
             if temp and temp not in dist_range[j]:
                 dist_range[j].append(temp)
 
-    for i in range(1, len(dist)+1, 1):
-        part = dist[:i]
         combination(part, dist_range, 0, len(weak), set())
         if button == True:
-            answer = i
+            answer = ii
             break
     if button == False:
         answer = -1
@@ -40,4 +45,4 @@ def solution(n, weak, dist):
         
 
 
-print(solution(12,[1, 3, 4, 9, 10],[3, 5, 7]))
+print(solution(12,[1, 5, 6, 10],[1, 2, 3, 4]))

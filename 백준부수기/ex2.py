@@ -1,50 +1,53 @@
-import collections
+def candidate_key(relation, candidate):
+    target = len(relation)
+    temp = []
+    for i in range(target):
+        temp.append(tuple(map(lambda n:relation[i][n], candidate)))
+    temp = set(temp)
 
-dr = [2, -2, 0, 0]
-dc = [0, 0, 2, -2]
-ddr = [1, -1, 1, -1]
-ddc = [-1, -1, 1, 1]
-def solution(board):
-    n = 2*len(board)-1
-    visited = [[False for _ in range(n)] for _ in range(n)]
-    visited[0][1] = True
-    deq = collections.deque()
-    deq.append((0,1,0))
-    while deq:
-        row, col, count = deq.popleft()
+    if len(temp) == target:
+        global answer
+        answer += 1
+        global button
+        button = True
 
-        #도착했는지
-        if row == n-1 and col == n-2:
-            return count
-        if row == n-2 and col == n-1:
-            return count
+def combination(relation, temp, k, target, result, buttons):
+    if len(result) == target:
+        candidate_key(relation, result)
+        return
 
-        for w in range(4):
-            nr = row + dr[w]
-            nc = col + dc[w]
-            if 0 <= nr < n and 0 <= nc < n:
-                if row%2 == 0:
-                    if visited[nr][nc] == False and board[nr//2][(nc+1)//2] == 0 and board[nr//2][(nc-1)//2] == 0:
-                        visited[nr][nc] = True
-                        deq.append((nr, nc, count+1))
-                elif col%2 == 0:
-                    if visited[nr][nc] == False and board[(nr+1)//2][nc//2] == 0 and board[(nr-1)//2][nc//2] == 0:
-                        visited[nr][nc] = True
-                        deq.append((nr, nc, count+1))
-        
-        for w in range(4):
-            nr = row + ddr[w]
-            nc = col + ddc[w]
-            if 0 <= nr < n and 0 <= nc < n:
-                if row%2 == 0:
-                    if visited[nr][nc] == False and board[(nr+ddr[w])//2][nc//2] == 0 and board[(nr+ddr[w])//2][(col-ddc[w])//2] == 0:
-                        visited[nr][nc] = True
-                        deq.append((nr, nc, count+1))
-                if col%2 == 0:
-                    if visited[nr][nc] == False and board[nr//2][(nc+ddc[w])//2] == 0 and board[(row-ddr[w])//2][(nc+ddc[w])//2] == 0:
-                        visited[nr][nc] = True
-                        deq.append((nr, nc, count+1))
+    if k == len(temp):
+        return
     
+    if buttons[temp[k]] == True:
+        combination(relation, temp, k+1, target, result, buttons)
+    else:
+        combination(relation, temp, k+1, target, result + [temp[k]], buttons)
+        combination(relation, temp, k+1, target, result, buttons)
+
+answer = 0
+button = False
+def solution(relation):
+    global button
+    index_info = [i for i in range(len(relation[0]))]
+
+    buttons = [False for _ in range(len(relation[0]))]
+
+    for r in range(1,len(index_info)+1):
+        for i in range(len(index_info)):
+            button = False
+            if buttons[i] == True:
+                continue
+            temp = index_info[i:]
+            combination(relation, temp, 1, r, [temp[0]], buttons)
+            if button == True:
+                buttons[i] = True
+            print(r, i, buttons)
+
+    return answer
 
 
-print(solution([[0, 0, 0, 1, 1],[0, 0, 0, 1, 0],[0, 1, 0, 1, 1],[1, 1, 0, 0, 1],[0, 0, 0, 0, 0]]))
+
+
+
+print(solution([['a',1,'aaa','c','ng'],['b',1,'bbb','c','g'],['c',1,'aaa','d','ng'],['d',2,'bbb','d','ng']]))

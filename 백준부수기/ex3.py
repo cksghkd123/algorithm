@@ -1,26 +1,9 @@
-import collections
-
-
-def solution(food_times, k):
-    food_times = collections.deque(enumerate(food_times))
-    for i in range(k):
-        print(i, food_times)
-        number, leftover = food_times.popleft()
-        leftover -= 1
-        if leftover > 0:
-            food_times.append((number, leftover))
-        
-        if food_times == False:
-            answer = -1
-            break
-    
-    print(food_times)
-    if food_times != -1:
-        number, leftover = food_times.popleft()
-        answer = number + 1
-
-    return answer
+def solution(nodeinfo):
+    tree = [0 for _ in range(len(nodeinfo*4))]
+    print(tree)
 
 
 
-print(solution([3, 1, 2],5))
+
+
+print(solution([[5,3],[11,5],[13,3],[3,5],[6,1],[1,3],[8,6],[7,2],[2,2]]))

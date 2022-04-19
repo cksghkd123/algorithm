@@ -37,6 +37,6 @@ for i in range(len(Elist)):
 print(total_cost)
 for info in mst_info:
     print(info)
-
+print(parent)
 #시간복잡도는 정렬 알고리즘에 따라 달라지는데, O(nlogn)의 정렬 알고리즘을 사용하면 
 #최종 시간복잡도는 O(nlogn + n) = O(nlogn)이 된다.

@@ -29,9 +29,13 @@ start = int(input())
 # distance 리스트 초기화
 distance = [float('inf') for _ in range(V+1)]
 distance[start] = 0
+# 시작 정점의 distance 초기화
+for i, j in maplist[start]:
+    distance[i] = j
 
 # selected 리스트 초기화
 selected = [0 for i in range(V+1)]
+# 0번 노드는 없어서
 selected[0] = 1
 
 # 아래 과정을 정점 수 만큼 반복
@@ -56,3 +60,6 @@ for _ in range(1, V+1):
 
 # 거리정보 출력
 print(distance)
+
+############## heapq로 구현하는게 더 빠르다 ###############
+############## 백준 1753 최단경로 문제 참고 ###############

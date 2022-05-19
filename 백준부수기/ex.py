@@ -1,34 +1,24 @@
-import sys
-input=sys.stdin.readline
+import heapq
 
-V=int(input())
-graph=[[] for _ in range(V+1)]
-for _ in range(V):
-    temp=list(map(int, input().split()))
-    for i in range(1,len(temp),2):
-        if temp[i]==-1: break
-        graph[temp[0]].append([temp[i],temp[i+1]])
 
-visited=[False]*(V+1)
-node,distance=0,0
-ans=0
-def dfs(num):
-    global ans,node,distance
-    print("answer = {}, node = {}, num = {}, distance = {}".format(ans,node,num,distance))
-    visited[num]=True
-    for v,d in graph[num]:
-        if visited[v]: continue
-        distance+=d
-        if ans<distance:
-            node=v
-            ans=distance
-        dfs(v)
-        distance-=d
-    visited[num]=False
-    print("return!!")
-    return 
+def solution(alp, cop, problems:list):
+    problems.sort()
+    heap = []
+    heapq.heappush(heap,(0, alp, cop))
 
-dfs(1)
-dfs(node)
+    while heap:
+        cost, now_alp, now_cop = heapq.heappop(heap)
+        heapq.heappush(heap,(cost+1, now_alp+1, now_cop))
+        heapq.heappush(heap,(cost+1, now_alp, now_cop+1))
+        can_solve = 0
+        for problem in problems:
+            if now_alp >= problem[0] and now_cop >= problem[1]:
+                heapq.heappush(heap,(cost+problem[4], now_alp+problem[2], now_cop+problem[3]))
+                can_solve += 1
+        if can_solve == len(problems):
+            return cost
+        
 
-print(ans)
+
+solution(10,10,[[10,15,2,1,2],[20,20,3,3,4]])#15
+solution(0,0,[[0,0,2,1,2],[4,5,3,1,2],[4,11,4,0,2],[10,4,0,4,2]])#13

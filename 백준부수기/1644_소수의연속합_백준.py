@@ -4,7 +4,7 @@ import math
 n = int(input())
 array = [True for i in range(n + 1)] 
 
-# 에라토스테네스의 체 알고리즘
+# 에라토스테네스의 체
 for i in range(2, int(math.sqrt(n)) + 1):
     if array[i] == True:
         j=2
@@ -19,7 +19,7 @@ for i in range(2, n + 1):
 
 pre_index = 0
 post_index = 0
-amount = prime_numbers[0]
+amount = 2
 
 count = 0
 

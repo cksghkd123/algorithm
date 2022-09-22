@@ -1,5 +1,4 @@
 import collections
-from pprint import pprint
 
 
 n, m, k = map(int,input().split())
@@ -47,7 +46,7 @@ for row in range(n):
 dice_trans = [(3,2,0,1,4,5),(5,4,2,3,0,1),(2,3,1,0,4,5),(4,5,2,3,1,0)]
 
 d = 0
-dice = [1,6,3,4,5,2] # 위,아래,동,서,남,북
+dice = [1,6,3,4,5,2] # 위,아래,동,서,북,남
 score = 0
 row = 0
 col = 0

@@ -3,35 +3,34 @@ import heapq
 
 
 n, m = map(int,input().split())
-preceding = [[] for _ in range(n+1)]
-trailing = [[] for _ in range(n+1)]
-selected = [False for _ in range(n+1)]
 
+ordering = [set() for _ in range(n+1)]
+trailer = [[] for _ in range(n+1)]
+
+#b보다 먼저 풀어야 하는 a를 b에 기록
 for _ in range(m):
     a, b = map(int,input().split())
-    preceding[b].append(a)
-    heapq.heappush(trailing[a],b)
+    ordering[b].add(a)
+    trailer[a].append(b)
 
-numbers = [(i,i) for i in range(1,n+1)]
-numbers = deque(numbers)
+solved = [False for _ in range(n+1)]
+answer = []
 
-result = []
-while numbers:
-    i, n = numbers.popleft()
-    if selected[n]:
+heap = []
+for number in range(1,n+1):
+    heapq.heappush(heap,(len(ordering[number]), number))
+
+while heap:
+    i, number = heapq.heappop(heap)
+
+    if solved[number]:
         continue
+    
+    if i == 0:
+        for t_number in trailer[number]:
+            ordering[t_number].remove(number)
+            heapq.heappush(heap,(len(ordering[t_number]), t_number))
+        answer.append(str(number))
 
-    for pre_n in preceding[n]:
-        if not selected[pre_n]:
-            numbers.append(n)
-            break
-    else:
-        result.append(n)
-        selected[n] = True
-        while trailing[n]:
-            nn = heapq.heappop(trailing)
-            for pre_n in preceding[nn]:
-                if not selected[pre_n]:
-                    numbers.append(n)
-                    break
-            
+a = ' '.join(answer)
+print(a)

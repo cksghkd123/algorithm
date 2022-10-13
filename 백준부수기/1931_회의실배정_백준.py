@@ -1,43 +1,26 @@
 import heapq
+from this import d
 
 
 n = int(input())
 conference_info = []
-for _ in range(n):
+for i in range(n):
     s, e = map(int,input().split())
-    conference_info.append((s,e))
-conference_info.sort()
+    conference_info.append((s,e,i))
+conference_info_byS = sorted(conference_info,key=lambda x:x[0])
+conference_info_byE = sorted(conference_info,key=lambda x:(x[1],x[0]))
 
-heap = []
-heap.append((0, 0, 0))
-visited = [-1 for _ in range(n)]
+visited = [False for _ in range(n)]
+current_time = 0
 answer = 0
-while heap:
-    i, count, current_time = heapq.heappop(heap)
-    print(i,count,current_time)
-    if i == n:
-        answer = max(answer, count)
-        continue
-    if conference_info[i][0] < current_time:
-        heapq.heappush(heap,(i+1, count, current_time))
-    else:
-        if visited[i] < count:
-            visited[i] = count
-            heapq.heappush(heap, (i+1, count+1, conference_info[i][1]))
-            heapq.heappush(heap,(i+1, count, current_time))
 
 
-    
+for i in range(n):
+    s1, e1, i1 = conference_info_byS[i]
+    s2, e2, i2 = conference_info_byE[i]
+    visited[i2] = True
+    if current_time <= s1 and visited[i1]:
+        answer += 1
+        current_time = e1
+
 print(answer)
-11
-1 4
-3 5
-0 6
-5 7
-3 8
-5 9
-6 10
-8 11
-8 12
-2 13
-12 14

@@ -4,7 +4,7 @@ for number, upper, lower in zip("12345", "ABCDE", "abcde"):
 
 ##실전##2차원 배열의 row, col 대입
 number = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]
-n_number = [list(i) for i in zip(*number)]
+n_number = [list(i) for i in zip(*reversed(number))]
 print(n_number)
 
 

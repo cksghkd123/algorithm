@@ -3,22 +3,20 @@ m = int(input())
 s = input()
 answer = 0
 
-def find(index):
-    for k in range(2*n+1):
-        if k%2 == 0:
-            if s[index+k] == 'O':
-                return 0
+i = 0
+
+while i < m - (2*n+1):
+    if s[i] == 'I':
+        for k in range(2*n+1):
+            if k%2 == 0:
+                if s[i+k] == 'O':
+                    break
+            else:
+                if s[i+k] == 'I':
+                    break
         else:
-            if s[index+k] == 'I':
-                return 0
-    
-    return 1
+            answer += 1
 
+    i += 1
 
-if 2*n+1 > m:
-    print(0)
-else:
-    for i in range(m-(2*n+1)):
-        answer += find(i)
-
-    print(answer)
+print(answer)

@@ -1,62 +1,77 @@
 import collections
+from pprint import pprint
 
+dr = [0, 0, 1, -1]
+dc = [1, -1, 0, 0]
 
-def combination(r,k,result):
-    if len(result) == r:
-        global answer
-        answer = min(answer,bfs(result))
-        return
+def combination(i, target, k, result):
 
-    if k == len(virus_list):
-        return
+    if len(result) == target:
+        return [result]
 
-    combination(r, k+1, result + [virus_list[k]])
-    combination(r, k+1, result)
+    if i == k:
+        return []
 
+    return combination(i+1, target, k, result + [i]) + combination(i+1, target, k, result)
 
-dr = [1, -1, 0, 0]
-dc = [0, 0, 1, -1]
-def bfs(activate_list):
-    visited = [[False for _ in range(n)] for _ in range(n)]
-    deq = collections.deque()
-    mx_count = 0
+n, m = map(int, input().split())
+answer = -1
+laboratory =[list(map(int, input().split())) for _ in range(n)]
 
-    for i in activate_list:
-        deq.append((*i,0))
-        visited[i[0]][i[1]] = True
-    while deq:
-        row, col, count = deq.popleft()
-        for w in range(4):
-            nr = row + dr[w]
-            nc = col + dc[w]
-            if 0 <= nr < n and 0 <= nc < n:
-                if map_list[nr][nc] == 0 and visited[nr][nc] == False:
-                    visited[nr][nc] = True
-                    deq.append((nr,nc,count+1))
-                    mx_count = count+1
-                elif map_list[nr][nc] == 2 and visited[nr][nc] == False:
-                    visited[nr][nc] = True
-                    deq.append((nr,nc,count+1))
-
-    for row in range(n):
-        for col in range(n):
-            if map_list[row][col] == 1:
-                continue
-            if visited[row][col] == False:
-                return float('inf')
-
-    return mx_count
-
-    
-n, m = map(int,input().split())
-map_list = [list(map(int,input().split())) for _ in range(n)]
-virus_list = []
+virus_point_list = []
+target_count = 0
 for row in range(n):
     for col in range(n):
-        if map_list[row][col] == 2:
-            virus_list.append((row,col))
-answer = float('inf')
-combination(m,0,[])
-if answer == float('inf'):
-    answer = -1
+        if laboratory[row][col] == 2:
+            virus_point_list.append((row, col))
+        if laboratory[row][col] == 0:
+            target_count += 1
+# print(virus_point_list)
+
+comb_list = combination(0,  m, len(virus_point_list), [])
+
+for comb_element in comb_list:
+    deq = collections.deque()
+    visited = [[-1 for _ in range(n)] for _ in range(n)]
+    for i in comb_element:
+        deq.append(virus_point_list[i])
+        visited[virus_point_list[i][0]][virus_point_list[i][1]] = 0
+    
+    result = -1
+    checked_count = 0
+    time = 0
+    while deq:
+        cr, cc = deq.popleft()
+        if laboratory[cr][cc] == 0:
+            time = visited[cr][cc]
+        
+        for i in range(4):
+            nr = cr + dr[i]
+            nc = cc + dc[i]
+            
+            if 0 <= nr < n and 0 <= nc < n and visited[nr][nc] == -1:
+                if laboratory[nr][nc] == 0:
+                    visited[nr][nc] = visited[cr][cc] + 1
+                    checked_count += 1
+                    deq.append((nr, nc))
+                elif laboratory[nr][nc] == 2:
+                    visited[nr][nc] = visited[cr][cc] + 1
+                    deq.append((nr, nc))
+
+    if checked_count == target_count:
+        result = time
+
+    # print(checked_count, target_count)
+    # print(visited)
+    if result == -1:
+        continue
+
+    if answer == -1:
+        answer = result
+    elif result < answer:
+        answer = result
+
+    # print(f"comb_element: {comb_element}")
+    # print(f"answer = {answer}, result = {result}")
 print(answer)
+

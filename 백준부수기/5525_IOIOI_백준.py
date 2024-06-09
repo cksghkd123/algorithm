@@ -1,22 +1,22 @@
-n = int(input())
-m = int(input())
-s = input()
-answer = 0
+import sys
+n = int(sys.stdin.readline().rstrip())
+m = int(sys.stdin.readline().rstrip())
+s = sys.stdin.readline().rstrip()
 
-i = 0
+cur = 0
+count = 0
+result = 0
 
-while i < m - (2*n+1):
-    if s[i] == 'I':
-        for k in range(2*n+1):
-            if k%2 == 0:
-                if s[i+k] == 'O':
-                    break
-            else:
-                if s[i+k] == 'I':
-                    break
-        else:
-            answer += 1
+while cur < (m - 1):
+    if s[cur:cur + 3] == 'IOI': # P_1 으로 체크
+        count += 1
+        cur += 2
+        if count == n:      # P_1이 n개가 되면 
+            result += 1     # P_n 갯수 증가
+            count -= 1
+    else:
+        # cur부터 3개의 문자가 IOI 가 아니면 P_1 갯수 초기화
+        count = 0
+        cur += 1
 
-    i += 1
-
-print(answer)
+print(result)

@@ -15,7 +15,7 @@ while cur < (m - 1):
             result += 1     # P_n 갯수 증가
             count -= 1
     else:
-        # cur부터 3개의 문자가 IOI 가 아니면 P_1 갯수 초기화
+        # cur부터 3개의 문자가 IOI 가 아니면 P_1 갯수 초기화.
         count = 0
         cur += 1
 

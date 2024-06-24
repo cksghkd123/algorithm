@@ -10,7 +10,6 @@ def solution(n, stickers):
         result = max(*dp[0], *dp[1])
         return result
 
-
     dp[0][1] = dp[1][0] + stickers[0][1] 
     dp[1][1] = dp[0][0] + stickers[1][1]
     if n == 2:

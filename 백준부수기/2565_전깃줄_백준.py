@@ -11,6 +11,5 @@ for i in range(1, n):
         if line_list[j][1] < line_list[i][1]:
             dp[i] = max(dp[i], dp[j]+1)
 
-
-print(n-dp[-1])
+print(n-max(dp))
 

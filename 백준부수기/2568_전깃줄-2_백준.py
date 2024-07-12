@@ -17,6 +17,7 @@ n = int(input())
 
 line_list = [list(map(int, input().split())) for _ in range(n)]
 
+line_list.sort()
 LIS = []
 pos = [0] * n
 prev = [-1] * n
@@ -41,10 +42,16 @@ while current != -1:
     result.append(line_list[current][0])
     current = prev[current]
 
-result.reverse()
+result = set(result)
 
-print(len(result))
-print(*result)
+answer = []
+for a, b in line_list:
+    if a not in result:
+        answer.append(a)
+
+print(len(answer))
+for a in answer:
+    print(a)
 
 
 

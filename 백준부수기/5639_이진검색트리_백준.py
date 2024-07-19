@@ -1,21 +1,35 @@
 import sys
-sys.setrecursionlimit(10**6)
 
-def lower_bound_binary_search(arr, n):
-    left = 0
-    right = len(arr)
+sys.setrecursionlimit(10000)
 
-    while left < right:
-        mid = (left+right) // 2
-        
-        if arr[mid] < n:
-            left = mid + 1
-        else:
-            right = mid
-    return left
+class Node:
+    def __init__(self, value:int = None, parents_value = None, left:'Node' = None, right:'Node' = None):
+        self.value = value
+        self.left = left
+        self.right = right
+        self.parents_value = parents_value
+    
+    def add_left(self, value:int):
+        self.left = Node(value, self.value)
+    
+    def add_right(self, value:int):
+        self.right = Node(value, self.parents_value)
+
+    def postorder(self):
+        if self.left is not None:
+            self.left.postorder()
+        if self.right is not None:
+            self.right.postorder()
+        print(self.value)
+
+    def preorder(self):
+        print(self.value)
+        if self.left != None:
+            self.left.preorder()
+        if self.right != None:
+            self.right.preorder()
 
 input_list = []
-
 while True:
     try:
         input_value = int(input())
@@ -23,15 +37,23 @@ while True:
     except:
         break
 
-def pre_to_post_order(preorder_list):
-    if len(preorder_list) == 0:
-        return
-    
-    i = lower_bound_binary_search(preorder_list[1:], preorder_list[0])
-    pre_to_post_order(preorder_list[1:1+i])
-    pre_to_post_order(preorder_list[1+i:])
-    
-    print(preorder_list[0])
+N = len(input_list)
+i = 1
 
+root = Node(input_list[0], float('inf'))
 
-pre_to_post_order(input_list)
+def add(node: Node):
+    global i
+    if i < N and input_list[i] < node.value:
+        node.add_left(input_list[i])
+        i += 1
+        add(node.left)
+    
+    if i < N and node.value < input_list[i] < node.parents_value:
+        node.add_right(input_list[i])
+        i += 1
+        add(node.right)
+
+add(root)
+
+root.postorder()

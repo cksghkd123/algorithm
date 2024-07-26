@@ -1,56 +1,77 @@
-INF = float('inf')
+import sys
+input = lambda: sys.stdin.readline().rstrip()
+miis = lambda: map(int, input().split())
+INF = int(1e9)
+OUT, IN, BOTH = 0, 1, 2
 
-def solution(n, w, map_list):
-    dp = [[INF for _ in range(n)] for _ in range(2)]
-
-    dp[1][-1] = 0
-    # 진행방향은 무조건 오른쪽 or 위쪽
-    # not
-    for i in range(n-1):
-        dp[0][i] = dp[]
-        if dp[0][i] + dp[1][i] <= w:
-            dp[1][i] = min(dp[i][1], dp[i][0]+1)
+def f(dp, outer, inner):
+    for i in range(1, N):
+        outer_squad = 1 if outer[i-1] + outer[i] <= W else 2
+        inner_squad = 1 if inner[i-1] + inner[i] <= W else 2
+        verti_squad = 1 if outer[i] + inner[i] <= W else 2
         
-        dp[i+1][1] = min(dp[i+1][1], dp[i][0]+1)
-        
+        dp[i][OUT] = min(dp[i-1][IN] + outer_squad, dp[i-1][BOTH] + 1)
+        dp[i][IN] = min(dp[i-1][OUT] + inner_squad, dp[i-1][BOTH] + 1)
+        dp[i][BOTH] = min(dp[i-1][BOTH] + verti_squad, \
+                          dp[i-2][BOTH] + outer_squad + inner_squad, \
+                          dp[i-1][IN] + outer_squad + 1, \
+                          dp[i-1][OUT] + inner_squad + 1)
 
-
-    answer = dp[1][n-1]
-
-    # 1-8 
-    dp = [[0 for _ in range(n)] for _ in range(2)]
-    if dp[0][0] + dp[0][n-1] <= w:
-        for i in range(n):
-            for j in range(2):
-        
-        answer = max(answer, dp[1][n-1])
-
-    # 9-16
-    dp = [[0 for _ in range(n)] for _ in range(2)]
-    if dp[1][0] + dp[1][n-1] <= w:
-
-        answer = max(answer, dp[1][n-1])
-
-    # 1-8 and 9-16
-    dp = [[0 for _ in range(n)] for _ in range(2)]
-    if dp[0][0] + dp[0][n-1] <= w and dp[1][0] + dp[1][n-1] <= w:
-
-        answer = max(answer, dp[1][n-1])
-        
+def case1(): # outer, inner 둘다 연결 안됨(default)
+    dp = [[0]*3 for _ in range(N)]
+    dp[0][OUT] = dp[0][IN] = 1
+    dp[0][BOTH] = 1 if outer[0] + inner[0] <= W else 2
+    outer_cpy, inner_cpy = outer[:], inner[:]
+    f(dp, outer_cpy, inner_cpy)
+    return dp[N-1][BOTH]
     
-    return answer
+def case2(): # outer만 연결된다면?
+    if outer[0] + outer[N-1] > W:
+        return INF
+    dp = [[0]*3 for _ in range(N)]
+    dp[0][OUT] = dp[0][IN] = 1
+    dp[0][BOTH] = 2
+    outer_cpy, inner_cpy = outer[:], inner[:]
+    outer_cpy[0] = outer_cpy[N-1] = INF
+    f(dp, outer_cpy, inner_cpy)
+    return dp[N-1][IN]
+
+def case3(): # inner만 연결된다면?
+    if inner[0] + inner[N-1] > W:
+        return INF
+    dp = [[0]*3 for _ in range(N)]
+    dp[0][OUT] = dp[0][IN] = 1
+    dp[0][BOTH] = 2
+    outer_cpy, inner_cpy = outer[:], inner[:]
+    inner_cpy[0] = inner_cpy[N-1] = INF
+    f(dp, outer_cpy, inner_cpy)
+    return dp[N-1][OUT]
+
+def case4(): # outer, inner 둘다 연결된다면? 
+    if outer[0] + outer[N-1] > W:
+        return INF
+    if inner[0] + inner[N-1] > W:
+        return INF
+    dp = [[0]*3 for _ in range(N)]
+    dp[0][OUT] = dp[0][IN] = 1
+    dp[0][BOTH] = 2
+    outer_cpy, inner_cpy = outer[:], inner[:]
+    outer_cpy[0] = outer_cpy[N-1] = INF
+    inner_cpy[0] = inner_cpy[N-1] = INF
+    f(dp, outer_cpy, inner_cpy)
+    return dp[N-2][BOTH]
 
 T = int(input())
-
 for _ in range(T):
-    N, W = map(int, input().split())
-    map_list = [list(map(int, input().split())) for _ in range(2)]
-    answer = solution(N, W, map_list)
-    
-    print(answer)
+    N, W = miis()
+    outer = list(miis())
+    inner = list(miis())
+    if N == 1:
+        print(1 if outer[0] + inner[0] <= W else 2)
+        continue
 
-
-# 1
-# 8 100
-# 70 60 55 43 57 60 44 50
-# 58 40 47 90 45 52 80 40
+    ans1 = case1()
+    ans2 = case2()
+    ans3 = case3()
+    ans4 = case4()
+    print(min(ans1, ans2, ans3, ans4))

@@ -1,4 +1,5 @@
-from pprint import pprint
+import sys
+sys.setrecursionlimit(10**5)
 
 dr = [-1, 1, 0, 0]
 dc = [0, 0, -1, 1]

@@ -38,4 +38,5 @@ for row in range(N):
         if not visited[row][col]:
             dfs(row, col)
             answer += 1
+            
 print(answer)

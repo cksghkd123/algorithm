@@ -16,7 +16,7 @@ def solution(n, m, map_list):
     for r in range(1, n):
         for c in range(1, m):
             dp[r][c][0] = max
-            
+            .
     print(dp)
 
 

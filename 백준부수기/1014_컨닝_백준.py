@@ -21,6 +21,7 @@ def solution(n, m, map_list):
 
 
 C = int(input())
+
 for _ in range(C):
     N, M = map(int, input().split())
     map_list = [list(input()) for _ in range(N)]

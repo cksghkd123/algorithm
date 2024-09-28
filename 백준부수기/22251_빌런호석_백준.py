@@ -1,38 +1,53 @@
-def dfs(curr, digit, count):
-    print(curr, digit, count)
+def cost_to_change(a, b):
     result = 0
-    if digit == 0:
-        return result
+    for i in range(7):        
+        if number_lights[a][i] != number_lights[b][i]:
+            result += 1
+
+    return result
+
+def dfs(curr, digit, count):
+    result = 0
+    if curr > N:
+        return 0
     
-    number = ( curr // digit ) % 10
+    if digit == K:
+        if curr != 0 and curr != X:
+            return 1
+
+        return 0
 
     for i in range(10):
-        add_count = bin(number_lights[number] ^ number_lights[i]).count('1')
-        nxt = (curr // (digit * 10) * 10 + i) * digit + (curr % digit)
-        
+        add_count = cost_to_change(number_by_digit[digit], i)
+        nxt = curr + i*(10**digit)
         if count + add_count <= P and nxt <= N:
-            if i != number and nxt != 0:
-                result += 1
-            result += dfs(nxt, digit//10, count+add_count)
+            result += dfs(nxt, digit+1, count+add_count)
             
     return result
 
 N, K, P, X = map(int, input().split())
 
 number_lights = [
-    0b1110111,
-    0b0010010,
-    0b1011101,
-    0b1011011,
-    0b0111010,
-    0b1101011,
-    0b1101111,
-    0b1010010,
-    0b1111111,
-    0b1111011,
-]
+    [1, 1, 1, 0, 1, 1, 1],
+    [0, 0, 1, 0, 0, 1, 0],
+    [1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 1, 1, 0, 1, 1],
+    [0, 1, 1, 1, 0, 1, 0],
+    [1, 1, 0, 1, 0, 1, 1],
+    [1, 1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 0, 0, 1, 0],
+    [1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 0, 1, 1]
+    ]
 
-answer = dfs(X, P, 0)
+number_by_digit = []
+temp = X
+
+for _ in range(K):
+    number_by_digit.append(temp%10)
+    temp //= 10
+    
+answer = dfs(0, 0, 0)
 
 print(answer)
 

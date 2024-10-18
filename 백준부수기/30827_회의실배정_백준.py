@@ -1,30 +1,32 @@
 import heapq
 
+def solution(N, A):
+    math_score = []
+    english_score = []
 
-N, K = map(int, input().split())
-meeting_list = [list(map(int, input().split())) for _ in range(N)]
+    visited = [False for _ in range(N)]
 
-heap = []
+    for i in range(N):
+        math_score.append((-A[i][0], i))
+        english_score.append((-A[i][1], i))
 
-for a, b in meeting_list:
-    heapq.heappush(heap, (b, a))
+    math_score.sort()
+    english_score.sort()
 
-room_list = [[] for _ in range(K)]
-answer= 0
+    answer = []
+    count = 0
 
-while heap:
-    end, start = heapq.heappop(heap)
+    for i in range(N):
+        m_score, m_i = math_score[i]
+        e_score, e_i = english_score[i]
 
-    for room in room_list:
-        if not room:
-            room.append(end)
-            answer += 1
-            break
-        else:
-            if room[-1] < start:
-                room.append(end)
-                answer += 1
-                break
+        visited
 
+
+        
+
+
+n = 7
+a = [[60, 70], [55, 79], [60, 80], [99, 1], [1, 99], [70, 70], [65, 75]]
+answer = solution(n, a)
 print(answer)
-print(room_list)
